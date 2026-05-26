@@ -1,60 +1,60 @@
 export const CATEGORIES = [
-  { id: 'all', name: 'All Categories', icon: '🌍' },
-  { id: 'technology', name: 'Technology', icon: '💻' },
-  { id: 'philosophy', name: 'Philosophy', icon: '🧠' },
-  { id: 'society', name: 'Society', icon: '👥' },
-  { id: 'science', name: 'Science', icon: '🔬' },
-  { id: 'religion', name: 'Religion & Ethics', icon: '📜' },
-  { id: 'business', name: 'Business & Economy', icon: '📈' }
+  { id: 'all', name: 'Todas', icon: '🌍' },
+  { id: 'technology', name: 'Tecnología', icon: '💻' },
+  { id: 'philosophy', name: 'Filosofía', icon: '🧠' },
+  { id: 'society', name: 'Sociedad', icon: '👥' },
+  { id: 'science', name: 'Ciencia', icon: '🔬' },
+  { id: 'religion', name: 'Religión y ética', icon: '📜' },
+  { id: 'business', name: 'Negocios y economía', icon: '📈' }
 ];
 
 export const INITIAL_DEBATES = [
   {
     id: 'debate-1',
-    title: 'Is Remote Work Superior to In-Office Work Long-Term?',
+    title: '¿El trabajo remoto es mejor que el trabajo en oficina a largo plazo?',
     category: 'business',
     type: 'live',
     status: 'active',
     creator: {
       name: 'Sarah Jenkins',
       avatar: '👩‍💼',
-      stance: 'Pro-Remote'
+      stance: 'Pro-remoto'
     },
     opponent: {
       name: 'David Miller',
       avatar: '👨‍💼',
-      stance: 'Pro-Office'
+      stance: 'Pro-oficina'
     },
     spectators: 342,
     nuances: [
-      { text: 'Impact on mental health & isolation', completed: true },
-      { text: 'Company culture & spontaneous collaboration', completed: true },
-      { text: 'Cost savings vs infrastructure costs', completed: false },
-      { text: 'Global talent access vs time-zone overhead', completed: false }
+      { text: 'Impacto en salud mental y aislamiento', completed: true },
+      { text: 'Cultura de empresa y colaboración espontánea', completed: true },
+      { text: 'Ahorro de costos frente a infraestructura', completed: false },
+      { text: 'Acceso a talento global y fricción horaria', completed: false }
     ],
-    timeRemaining: 180, // seconds
-    activeSpeaker: 'creator', // 'creator' or 'opponent'
+    timeRemaining: 180,
+    activeSpeaker: 'creator',
     createdAt: new Date().toISOString()
   },
   {
     id: 'debate-2',
-    title: 'Should Social Media Algorithms Be Regulated by Government?',
+    title: '¿Deben los gobiernos regular los algoritmos de redes sociales?',
     category: 'technology',
     type: 'scheduled',
-    status: 'open', // open for applications
+    status: 'open',
     creator: {
-      name: 'Dr. Evelyn Carter',
+      name: 'Dra. Evelyn Carter',
       avatar: '👩‍🔬',
-      stance: 'Pro-Regulation',
-      details: 'Focusing on psychological impacts and feedback loops designed for addiction.'
+      stance: 'A favor de regular',
+      details: 'Enfoque en impactos psicológicos y bucles de adicción.'
     },
-    opponent: null, // open
+    opponent: null,
     spectators: 0,
-    scheduledFor: new Date(Date.now() + 24 * 60 * 60 * 1000 * 2).toISOString(), // 2 days from now
+    scheduledFor: new Date(Date.now() + 24 * 60 * 60 * 1000 * 2).toISOString(),
     nuances: [
-      { text: 'Freedom of speech issues & censorship fears', completed: false },
-      { text: 'Protecting children and teenagers', completed: false },
-      { text: 'Corporate transparency & algorithm audits', completed: false }
+      { text: 'Libertad de expresión y temor a censura', completed: false },
+      { text: 'Protección de niños y adolescentes', completed: false },
+      { text: 'Transparencia corporativa y auditorías algorítmicas', completed: false }
     ],
     createdAt: new Date().toISOString(),
     applications: [
@@ -62,38 +62,38 @@ export const INITIAL_DEBATES = [
         id: 'app-1',
         name: 'James Lee',
         avatar: '👨‍💻',
-        stance: 'Anti-Regulation',
-        coverLetter: 'I am a software engineer. Government regulation of algorithms is a slippery slope to state censorship. Tech companies should self-regulate through open-source algorithms.',
+        stance: 'Contra la regulación',
+        coverLetter: 'Soy ingeniero de software. Regular algoritmos puede abrir la puerta a censura estatal. Las empresas deberían autorregularse con algoritmos auditables.',
         status: 'pending'
       },
       {
         id: 'app-2',
         name: 'Sophia Martinez',
         avatar: '👩‍🎓',
-        stance: 'Nuanced / Technical Auditing Only',
-        coverLetter: 'I believe instead of outright bans or control, government should only mandate auditability. Happy to join and represent this middle-ground stance.',
+        stance: 'Auditoría técnica, no control',
+        coverLetter: 'Creo que el gobierno debería exigir auditabilidad, no prohibiciones amplias. Puedo representar una postura intermedia.',
         status: 'pending'
       }
     ]
   },
   {
     id: 'debate-3',
-    title: 'Will Artificial Intelligence Outperform Human Creative Artists by 2030?',
+    title: '¿La inteligencia artificial superará a los artistas humanos antes de 2030?',
     category: 'technology',
     type: 'live',
-    status: 'waiting', // host waiting for opponent to join
+    status: 'waiting',
     creator: {
       name: 'Alex Rivera',
       avatar: '🎨',
-      stance: 'Anti-AI Dominance',
-      details: 'Art requires intentional consciousness and lived human experiences.'
+      stance: 'Contra el dominio de la IA',
+      details: 'El arte requiere conciencia intencional y experiencia humana vivida.'
     },
     opponent: null,
     spectators: 12,
     nuances: [
-      { text: 'Emotional connection vs pattern matching', completed: false },
-      { text: 'Copyright and derivative training data issues', completed: false },
-      { text: 'Economic survival of human artists', completed: false }
+      { text: 'Conexión emocional frente a reconocimiento de patrones', completed: false },
+      { text: 'Derechos de autor y datos de entrenamiento', completed: false },
+      { text: 'Supervivencia económica de artistas humanos', completed: false }
     ],
     createdAt: new Date().toISOString()
   }
@@ -101,28 +101,28 @@ export const INITIAL_DEBATES = [
 
 export const INITIAL_CHAT_MESSAGES = {
   'debate-1': [
-    { id: 'c1', sender: 'Lucas', avatar: '🙋‍♂️', text: 'Sarah is making a great point about commute times.', timestamp: Date.now() - 30000 },
-    { id: 'c2', sender: 'Emily', avatar: '🙋‍♀️', text: 'But David is right, whiteboard sessions are impossible to replace online.', timestamp: Date.now() - 25000 },
-    { id: 'c3', sender: 'Marcus', avatar: '👨‍🚀', text: 'Hybrid is the obvious middle ground here.', timestamp: Date.now() - 15000 },
-    { id: 'c4', sender: 'Chloe', avatar: '👩‍🎨', text: 'Is there a vote poll open yet? Want to see what others think.', timestamp: Date.now() - 5000 }
+    { id: 'c1', sender: 'Lucas', avatar: '🙋‍♂️', text: 'Sarah tiene un buen punto sobre el tiempo perdido en desplazamientos.', timestamp: Date.now() - 30000 },
+    { id: 'c2', sender: 'Emily', avatar: '🙋‍♀️', text: 'Pero David tiene razón: las sesiones de pizarra son difíciles de reemplazar en línea.', timestamp: Date.now() - 25000 },
+    { id: 'c3', sender: 'Marcus', avatar: '👨‍🚀', text: 'El modelo híbrido parece el punto medio lógico.', timestamp: Date.now() - 15000 },
+    { id: 'c4', sender: 'Chloe', avatar: '👩‍🎨', text: '¿Ya hay encuesta abierta? Quiero ver qué opina la audiencia.', timestamp: Date.now() - 5000 }
   ]
 };
 
 export const INITIAL_POLLS = {
   'debate-1': {
-    question: 'Who is making the stronger case right now?',
+    question: '¿Quién está construyendo el argumento más sólido ahora?',
     options: [
-      { label: 'Sarah (Pro-Remote)', votes: 84 },
-      { label: 'David (Pro-Office)', votes: 71 },
-      { label: 'Undecided / Tie', votes: 23 }
+      { label: 'Sarah (Pro-remoto)', votes: 84 },
+      { label: 'David (Pro-oficina)', votes: 71 },
+      { label: 'Indeciso / empate', votes: 23 }
     ]
   },
   'debate-3': {
-    question: 'Do you believe AI can truly be creative?',
+    question: '¿Crees que la IA puede ser realmente creativa?',
     options: [
-      { label: 'Yes, creativity is just generation', votes: 5 },
-      { label: 'No, it requires consciousness', votes: 12 },
-      { label: 'Undecided', votes: 2 }
+      { label: 'Sí, crear también es generar', votes: 5 },
+      { label: 'No, requiere conciencia', votes: 12 },
+      { label: 'Indeciso', votes: 2 }
     ]
   }
 };

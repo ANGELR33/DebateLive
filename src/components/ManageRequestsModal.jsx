@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function ManageRequestsModal({ isOpen, debate, onClose, onApprove, onReject }) {
   if (!isOpen || !debate) return null;
 
@@ -16,18 +14,18 @@ export default function ManageRequestsModal({ isOpen, debate, onClose, onApprove
         </button>
 
         <h2 className="font-extrabold text-xl text-slate-100 mb-1 text-left">
-          Debate Applications
+          Postulaciones al debate
         </h2>
         <p className="text-xs text-indigo-400 font-semibold tracking-wider uppercase mb-5 text-left">
-          Review opposing stances and choose your opponent
+          Revisa las posturas opuestas y elige a tu oponente
         </p>
 
         {/* Topic Info */}
         <div className="bg-slate-950 p-4 rounded-2xl border border-white/5 mb-6 text-left">
-          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black mb-1">Debate Topic:</p>
+          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black mb-1">Tema del debate:</p>
           <h4 className="text-sm font-bold text-slate-200 mb-2">{debate.title}</h4>
           <p className="text-xs text-slate-400 leading-tight">
-            Your Stance: <span className="text-indigo-400 font-bold">{debate.creator.stance}</span>
+            Tu postura: <span className="text-indigo-400 font-bold">{debate.creator.stance}</span>
           </p>
         </div>
 
@@ -35,7 +33,7 @@ export default function ManageRequestsModal({ isOpen, debate, onClose, onApprove
         <div className="space-y-4 max-h-[350px] overflow-y-auto pr-1">
           {applications.length === 0 ? (
             <div className="text-center py-10 border border-dashed border-white/5 rounded-2xl text-xs text-slate-500">
-              No applications submitted yet. Apply from another tab to test!
+              Todavía no hay postulaciones. Prueba desde otra pestaña.
             </div>
           ) : (
             applications.map((app) => (
@@ -48,7 +46,7 @@ export default function ManageRequestsModal({ isOpen, debate, onClose, onApprove
                     <span className="text-2xl">{app.avatar}</span>
                     <div>
                       <h4 className="text-xs font-bold text-slate-200">{app.name}</h4>
-                      <p className="text-[10px] text-rose-400 font-semibold">Stance: {app.stance}</p>
+                      <p className="text-[10px] text-rose-400 font-semibold">Postura: {app.stance}</p>
                     </div>
                   </div>
 
@@ -57,13 +55,13 @@ export default function ManageRequestsModal({ isOpen, debate, onClose, onApprove
                       onClick={() => onReject(debate.id, app.id)}
                       className="px-3 py-1.5 hover:bg-rose-500/10 text-rose-400 hover:text-rose-300 border border-rose-500/10 hover:border-rose-500/30 rounded-xl text-[10px] font-bold transition-all cursor-pointer"
                     >
-                      Decline
+                      Rechazar
                     </button>
                     <button
                       onClick={() => onApprove(debate.id, app)}
                       className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black rounded-xl text-[10px] shadow-lg active:scale-95 transition-all cursor-pointer border border-emerald-400/20"
                     >
-                      ✓ Approve Stance
+                      Aprobar postura
                     </button>
                   </div>
                 </div>
@@ -83,7 +81,7 @@ export default function ManageRequestsModal({ isOpen, debate, onClose, onApprove
             onClick={onClose}
             className="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition-all cursor-pointer border border-white/5"
           >
-            Close
+            Cerrar
           </button>
         </div>
       </div>

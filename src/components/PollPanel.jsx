@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function PollPanel({ debateId, poll, onVote }) {
   const [votedIdx, setVotedIdx] = useState(null);
@@ -6,7 +6,7 @@ export default function PollPanel({ debateId, poll, onVote }) {
   if (!poll) {
     return (
       <div className="bg-slate-900/40 border border-white/5 p-6 rounded-3xl text-center text-xs text-slate-500 italic shadow-xl">
-        No active audience polls for this debate.
+        No hay encuestas activas para este debate.
       </div>
     );
   }
@@ -23,7 +23,7 @@ export default function PollPanel({ debateId, poll, onVote }) {
     onVote(debateId, idx);
   };
 
-  // Simulates dynamic spectator voting
+  // Simula votos dinámicos de la audiencia.
   const handleSimulateVote = () => {
     const randomIdx = Math.floor(Math.random() * poll.options.length);
     onVote(debateId, randomIdx);
@@ -39,7 +39,7 @@ export default function PollPanel({ debateId, poll, onVote }) {
           <div className="flex items-center gap-2">
             <span className="text-lg">📊</span>
             <h3 className="text-xs font-black text-slate-200 uppercase tracking-wider">
-              Audience Poll
+              Encuesta de audiencia
             </h3>
           </div>
           
@@ -47,7 +47,7 @@ export default function PollPanel({ debateId, poll, onVote }) {
             onClick={handleSimulateVote}
             className="text-[10px] text-slate-500 hover:text-slate-300 font-bold bg-white/5 hover:bg-white/10 px-2 py-1 rounded-lg border border-transparent hover:border-white/5 transition-all cursor-pointer select-none"
           >
-            🎲 Sim Vote
+            Simular voto
           </button>
         </div>
 
@@ -87,7 +87,7 @@ export default function PollPanel({ debateId, poll, onVote }) {
                     className="w-full text-left p-3.5 bg-slate-950 hover:bg-slate-900 border border-white/5 hover:border-indigo-500/30 text-xs text-slate-300 font-bold rounded-2xl transition-all active:scale-99 cursor-pointer flex items-center justify-between"
                   >
                     <span>{option.label}</span>
-                    <span className="text-[10px] text-slate-600 font-bold">Vote →</span>
+                    <span className="text-[10px] text-slate-600 font-bold">Votar →</span>
                   </button>
                 )}
               </div>
@@ -98,8 +98,8 @@ export default function PollPanel({ debateId, poll, onVote }) {
 
       {/* Info footer */}
       <div className="border-t border-white/5 pt-4 mt-5 flex items-center justify-between text-[10px] text-slate-500">
-        <span>Status: <span className="text-indigo-400 font-semibold uppercase">Collecting Votes</span></span>
-        <span className="font-bold">{totalVotes} votes cast</span>
+        <span>Estado: <span className="text-indigo-400 font-semibold uppercase">Recolectando votos</span></span>
+        <span className="font-bold">{totalVotes} votos</span>
       </div>
     </div>
   );

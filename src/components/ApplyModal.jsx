@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const AVATARS = ['🙋‍♂️', '🙋‍♀️', '👨‍💻', '👩‍💻', '👨‍💼', '👩‍💼', '🎨', '🧠', '🔬', '🎙️', '⚖️', '🌍'];
 
 export default function ApplyModal({ isOpen, debate, onClose, onSubmit }) {
-  if (!isOpen || !debate) return null;
-
-  const [name, setName] = useState('Sarah Opponent');
+  const [name, setName] = useState('Oponente invitado');
   const [avatar, setAvatar] = useState('🧠');
   const [stance, setStance] = useState('');
   const [coverLetter, setCoverLetter] = useState('');
+
+  if (!isOpen || !debate) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,8 +26,7 @@ export default function ApplyModal({ isOpen, debate, onClose, onSubmit }) {
     onSubmit(debate.id, applicantData);
     onClose();
 
-    // Reset Form
-    setName('Sarah Opponent');
+    setName('Oponente invitado');
     setAvatar('🧠');
     setStance('');
     setCoverLetter('');
@@ -46,22 +45,22 @@ export default function ApplyModal({ isOpen, debate, onClose, onSubmit }) {
         </button>
 
         <h2 className="font-extrabold text-xl text-slate-100 mb-1 text-left">
-          {isLiveWaiting ? 'Enter Debate Stage' : 'Apply as Opponent'}
+          {isLiveWaiting ? 'Entrar al escenario' : 'Postularse como oponente'}
         </h2>
         <p className="text-xs text-indigo-400 font-semibold tracking-wider uppercase mb-5 text-left">
-          {isLiveWaiting ? 'Clash live in front of the audience' : 'Pitch your stance to the debate creator'}
+          {isLiveWaiting ? 'Debate en vivo frente a la audiencia' : 'Presenta tu postura al creador del debate'}
         </p>
 
         {/* Topic details */}
         <div className="bg-slate-950 p-4 rounded-2xl border border-white/5 mb-6 text-left">
-          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black mb-1">Debate Topic:</p>
+          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black mb-1">Tema del debate:</p>
           <h4 className="text-sm font-bold text-slate-200 mb-3">{debate.title}</h4>
 
           <div className="flex items-center gap-2 border-t border-white/5 pt-3">
             <span className="text-lg">{debate.creator.avatar}</span>
             <div>
-              <p className="text-[9px] text-slate-500 leading-none">Creator: {debate.creator.name}</p>
-              <p className="text-xs font-bold text-indigo-400 mt-0.5">Stance: {debate.creator.stance}</p>
+              <p className="text-[9px] text-slate-500 leading-none">Creador: {debate.creator.name}</p>
+              <p className="text-xs font-bold text-indigo-400 mt-0.5">Postura: {debate.creator.stance}</p>
             </div>
           </div>
         </div>
@@ -88,7 +87,7 @@ export default function ApplyModal({ isOpen, debate, onClose, onSubmit }) {
 
             <div className="sm:col-span-2 space-y-4 text-left">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-300">Your Display Name *</label>
+                <label className="text-xs font-bold text-slate-300">Tu nombre visible *</label>
                 <input
                   type="text"
                   required
@@ -99,11 +98,11 @@ export default function ApplyModal({ isOpen, debate, onClose, onSubmit }) {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-300">Your Opposing Stance *</label>
+                <label className="text-xs font-bold text-slate-300">Tu postura opuesta *</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Pro-AI art / Creator tool stance"
+                  placeholder="Ej. Arte con IA / Herramienta para creadores"
                   value={stance}
                   onChange={(e) => setStance(e.target.value)}
                   className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-all placeholder:text-slate-600"
@@ -114,15 +113,15 @@ export default function ApplyModal({ isOpen, debate, onClose, onSubmit }) {
 
           <div className="space-y-2 text-left">
             <label className="text-xs font-bold text-slate-300">
-              {isLiveWaiting ? 'Introduce yourself (Optional)' : 'Why should we debate? (Pitch) *'}
+              {isLiveWaiting ? 'Preséntate (opcional)' : '¿Por qué deberían debatir contigo? *'}
             </label>
             <textarea
               required={!isLiveWaiting}
               rows={3}
               placeholder={
                 isLiveWaiting
-                  ? "Say something quick as you join the room..."
-                  : "State your background and a summary of the arguments you intend to present..."
+                  ? 'Escribe una presentación breve antes de entrar...'
+                  : 'Resume tu experiencia y los argumentos que quieres presentar...'
               }
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
@@ -136,14 +135,14 @@ export default function ApplyModal({ isOpen, debate, onClose, onSubmit }) {
               onClick={onClose}
               className="px-5 py-2.5 bg-transparent hover:bg-white/5 text-slate-400 hover:text-white font-bold text-xs rounded-xl transition-all"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
               disabled={!name.trim() || !stance.trim() || (!isLiveWaiting && !coverLetter.trim())}
               className="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:from-indigo-900/40 disabled:to-purple-900/40 disabled:text-slate-500 text-white font-extrabold text-xs rounded-xl border border-white/15 disabled:border-transparent transition-all shadow-lg active:scale-95 disabled:pointer-events-none"
             >
-              {isLiveWaiting ? '⚡ Go Live Stage' : 'Submit Pitch'}
+              {isLiveWaiting ? 'Entrar en vivo' : 'Enviar postulación'}
             </button>
           </div>
         </form>

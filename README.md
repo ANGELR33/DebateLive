@@ -1,16 +1,47 @@
-# React + Vite
+# DebateLive
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interfaz React/Vite para crear debates en vivo con sala Jitsi, chat, encuesta y postulaciones.
 
-Currently, two official plugins are available:
+## Desarrollo local
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+## Sincronizacion remota gratis para pruebas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+La app funciona sin backend usando `localStorage`. Para probar desde varios dispositivos o navegadores, configura Firestore en Firebase.
 
-## Expanding the ESLint configuration
+1. Crea un proyecto en [Firebase Console](https://console.firebase.google.com/).
+2. Crea una base Cloud Firestore en modo nativo.
+3. Para una prueba rapida, usa reglas abiertas temporalmente:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```txt
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /debateLive/{document} {
+      allow read, write: if true;
+    }
+  }
+}
+```
+
+4. Crea una app web en Firebase y copia `apiKey` y `projectId`.
+5. En local, copia `.env.example` a `.env` y completa:
+
+```bash
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_PROJECT_ID=...
+```
+
+6. En Vercel, agrega esas mismas variables en Project Settings -> Environment Variables.
+
+Con esas variables, DebateLive guarda debates, chat y encuestas en Firestore. Sin ellas, vuelve automaticamente a modo local.
+
+## Notas
+
+- Jitsi gestiona el video remoto.
+- Firestore sincroniza el estado de la app cada pocos segundos.
+- Las reglas abiertas son solo para pruebas. Antes de produccion hay que agregar autenticacion o reglas mas estrictas.

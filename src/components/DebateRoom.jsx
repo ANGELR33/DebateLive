@@ -1,56 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 export default function DebateRoom({ debate, viewerRole, onUpdateDebate, addToast }) {
-  // Sound Synthesizer for Turn Warnings
-  const playBeep = (freq = 587.33, duration = 0.15) => { // D5 note
+  const playBeep = (freq = 587.33, duration = 0.15) => {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
       const audioCtx = new AudioContext();
       const osc = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
-      
+
       osc.connect(gainNode);
       gainNode.connect(audioCtx.destination);
       osc.frequency.value = freq;
       osc.type = 'sine';
-      
+
       gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
       gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-      
+
       osc.start();
       osc.stop(audioCtx.currentTime + duration);
     } catch (e) {
-      console.warn("Audio API failed", e);
+      console.warn('La API de audio falló', e);
     }
   };
 
-  // Setup Turn Timer countdown
   useEffect(() => {
     let timer;
     if (debate.status === 'active') {
       timer = setInterval(() => {
         const newTime = Math.max(0, debate.timeRemaining - 1);
-        
-        // play warning beep when time goes under 10 seconds
+
         if (newTime <= 10 && newTime > 0 && newTime !== debate.timeRemaining) {
-          playBeep(newTime <= 3 ? 698.46 : 587.33, newTime <= 3 ? 0.25 : 0.15); // F5 for final 3s, D5 for 4-10s
+          playBeep(newTime <= 3 ? 698.46 : 587.33, newTime <= 3 ? 0.25 : 0.15);
         }
 
         if (newTime === 0) {
-          // Play turn shift buzzer
-          playBeep(293.66, 0.4); // D4 buzz
-          // Automatically swap active speaker and reset timer (e.g. 120s)
+          playBeep(293.66, 0.4);
           const nextSpeaker = debate.activeSpeaker === 'creator' ? 'opponent' : 'creator';
           onUpdateDebate({
             ...debate,
-            timeRemaining: 120, // 2 mins next turn
+            timeRemaining: 120,
             activeSpeaker: nextSpeaker
           });
           addToast({
             type: 'info',
-            title: 'Turn Expired',
-            message: `Mic passed to ${nextSpeaker === 'creator' ? debate.creator.name : debate.opponent.name}.`
+            title: 'Turno agotado',
+            message: `El micrófono pasó a ${nextSpeaker === 'creator' ? debate.creator.name : debate.opponent.name}.`
           });
         } else {
           onUpdateDebate({
@@ -72,27 +67,27 @@ export default function DebateRoom({ debate, viewerRole, onUpdateDebate, addToas
 
   const getViewerName = () => {
     if (viewerRole === 'host') return debate.creator.name;
-    if (viewerRole === 'opponent') return debate.opponent?.name || 'Challenger';
-    return 'Spectator';
+    if (viewerRole === 'opponent') return debate.opponent?.name || 'Retador';
+    return 'Espectador';
   };
 
   const viewerName = getViewerName();
   const isActive = debate.status === 'active';
-  const creatorActive = debate.activeSpeaker === 'creator';
-  const opponentActive = debate.activeSpeaker === 'opponent';
+  const isWaitingLive = debate.type === 'live' && debate.status === 'waiting';
+  const turnTime = debate.timeRemaining || 120;
 
   const handleToggleSpeaker = () => {
     const nextSpeaker = debate.activeSpeaker === 'creator' ? 'opponent' : 'creator';
-    playBeep(880, 0.1); // High A5 click
+    playBeep(880, 0.1);
     onUpdateDebate({
       ...debate,
       activeSpeaker: nextSpeaker,
-      timeRemaining: 120 // Reset turn clock
+      timeRemaining: 120
     });
     addToast({
       type: 'info',
-      title: 'Speaker Shift',
-      message: `Microphone passed to ${nextSpeaker === 'creator' ? debate.creator.name : debate.opponent.name}.`
+      title: 'Cambio de turno',
+      message: `El micrófono pasó a ${nextSpeaker === 'creator' ? debate.creator.name : debate.opponent.name}.`
     });
   };
 
@@ -107,27 +102,34 @@ export default function DebateRoom({ debate, viewerRole, onUpdateDebate, addToas
 
   return (
     <div className="flex-1 flex flex-col gap-6 p-6">
-      {/* Debate Stage */}
-      {isActive ? (
-        /* JITSI MEET ACTIVE VIDEO CLASH STAGE */
+      {isActive || isWaitingLive ? (
         <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-slate-900/40 p-4 flex-1 h-[400px] md:h-full min-h-[380px] shadow-2xl flex flex-col justify-stretch">
+          {isWaitingLive && (
+            <div className="mb-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2 rounded-2xl border border-amber-500/20 bg-amber-950/30 px-4 py-3 text-left">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-amber-300">Sala previa en vivo</p>
+                <p className="text-xs font-semibold text-slate-300">
+                  El anfitrión ya puede transmitir mientras se espera un oponente.
+                </p>
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                Turno abierto
+              </span>
+            </div>
+          )}
           <iframe
             src={`https://meet.jit.si/debate-arena-${debate.id}#userInfo.displayName="${viewerName}"&config.prejoinPageEnabled=false&config.startWithAudioMuted=true&config.startWithVideoMuted=false`}
             allow="camera; microphone; display-capture; autoplay"
             className="w-full h-full border-0 rounded-2xl bg-slate-950"
-            title="Live Debate Stage"
+            title="Escenario de debate en vivo"
           />
         </div>
       ) : (
-        /* MOCK WAITING PANEL (Creator waiting for Opponent) */
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch flex-1">
-          {/* Creator Panel */}
-          <div
-            className={`relative rounded-3xl overflow-hidden border-2 transition-all duration-300 flex flex-col justify-between p-6 border-indigo-500 bg-indigo-950/20 shadow-2xl shadow-indigo-500/10`}
-          >
+          <div className="relative rounded-3xl overflow-hidden border-2 transition-all duration-300 flex flex-col justify-between p-6 border-indigo-500 bg-indigo-950/20 shadow-2xl shadow-indigo-500/10">
             <div className="absolute top-4 left-4 bg-indigo-500 text-slate-950 px-3 py-1 rounded-full font-black text-[9px] uppercase tracking-widest flex items-center gap-1.5 shadow-md">
               <span className="h-1.5 w-1.5 rounded-full bg-slate-950 animate-pulse"></span>
-              Host (Creator)
+              Anfitrión
             </div>
 
             <div className="h-[240px] md:h-full min-h-[220px] rounded-2xl bg-slate-950 border border-white/5 flex items-center justify-center relative overflow-hidden group shadow-inner">
@@ -152,17 +154,14 @@ export default function DebateRoom({ debate, viewerRole, onUpdateDebate, addToas
             </div>
           </div>
 
-          {/* Open Challenger Panel */}
-          <div
-            className={`relative rounded-3xl overflow-hidden border border-white/5 bg-slate-900/40 transition-all duration-300 flex flex-col justify-between p-6`}
-          >
+          <div className="relative rounded-3xl overflow-hidden border border-white/5 bg-slate-900/40 transition-all duration-300 flex flex-col justify-between p-6">
             <div className="h-[240px] md:h-full min-h-[220px] rounded-2xl bg-slate-950 border border-white/5 flex items-center justify-center relative overflow-hidden group shadow-inner">
               <div className="text-center p-6 flex flex-col items-center gap-3">
                 <span className="text-5xl text-slate-700 animate-pulse">👤</span>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-500 italic">Stage Seat Open</h4>
+                  <h4 className="text-sm font-bold text-slate-500 italic">Turno abierto</h4>
                   <p className="text-xs text-slate-600 mt-1 max-w-[200px]">
-                    Waiting for an opponent to enter the debate stage. Apply from another tab to join.
+                    Esperando que un oponente entre al escenario. Postúlate desde otra pestaña para unirte.
                   </p>
                 </div>
               </div>
@@ -171,51 +170,47 @@ export default function DebateRoom({ debate, viewerRole, onUpdateDebate, addToas
         </div>
       )}
 
-      {/* Control Timer Dock */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 bg-slate-900/60 backdrop-blur border border-white/5 rounded-2xl shadow-xl">
         <div className="flex items-center gap-3 text-left">
           <span className="text-2xl">⏳</span>
           <div>
-            <h5 className="text-[10px] text-slate-500 uppercase tracking-widest font-black leading-none">Turn Countdown:</h5>
+            <h5 className="text-[10px] text-slate-500 uppercase tracking-widest font-black leading-none">Cuenta regresiva:</h5>
             <p className="text-2xl font-black text-slate-100 mt-1 font-mono tracking-tight">
-              {formatTime(debate.timeRemaining)}
+              {formatTime(turnTime)}
             </p>
           </div>
         </div>
 
-        {/* Turn Warn Bar (visual countdown help) */}
         <div className="flex-1 max-w-md mx-6 h-1.5 bg-white/5 rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full transition-all duration-1000 ${
-              debate.timeRemaining <= 10
+              turnTime <= 10
                 ? 'bg-rose-500 animate-pulse'
-                : debate.timeRemaining <= 30
-                ? 'bg-amber-500'
-                : 'bg-indigo-500'
+                : turnTime <= 30
+                  ? 'bg-amber-500'
+                  : 'bg-indigo-500'
             }`}
-            style={{ width: `${(debate.timeRemaining / 120) * 100}%` }}
+            style={{ width: `${(turnTime / 120) * 100}%` }}
           />
         </div>
 
-        {/* Stage controls */}
         {debate.status === 'active' ? (
           <button
             onClick={handleToggleSpeaker}
             className="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-extrabold text-xs rounded-xl shadow-lg border border-white/10 active:scale-95 transition-all flex items-center justify-center gap-2"
           >
-            🎙️ Pass Microphone Turn
+            Pasar micrófono
           </button>
         ) : (
           <div className="text-xs text-amber-400 font-semibold uppercase tracking-wider bg-amber-950/30 px-4 py-2.5 rounded-xl border border-amber-500/20">
-            Waiting for opponent to begin clash countdown...
+            Esperando oponente para iniciar la cuenta del debate...
           </div>
         )}
       </div>
 
-      {/* Nuance Checklists panel */}
       <div className="bg-slate-900/40 border border-white/5 p-6 rounded-3xl shadow-xl">
         <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-white/5 pb-3 mb-4 text-left">
-          Interactive Clash Nuance Points
+          Puntos de choque del debate
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -243,7 +238,7 @@ export default function DebateRoom({ debate, viewerRole, onUpdateDebate, addToas
                   {nuance.text}
                 </h5>
                 <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-widest">
-                  {nuance.completed ? '✓ Completed Stance' : '• Under Debate'}
+                  {nuance.completed ? 'Completado' : 'En debate'}
                 </p>
               </div>
             </div>
